@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const dburi = 
+const dburi = "mongodb://localhost:27017"
 const dbname = "hotel-reservation"
 const userCol = "users"
 
@@ -24,17 +24,13 @@ var config = fiber.Config{
 
 func main() {
 	listenAddr := flag.String("listenaddr", ":4000", "The listen address of the API server.")
-	flag.Parse()
-	
-	
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.DBURI))
 	if err != nil {
 		log.Fatal(err)
 	}
 	// handler initilization
 	userHandler := api.NewUserHandler(db.NewMongoUserStore(client, db.DBNAME))
-
-	listenAddr := flag.String("listenAddr", ":4000", "The listen address of the API server")
+	listenAddr = flag.String("listenAddr", ":4000", "The listen address of the API server")
 	flag.Parse()
 
 	app := fiber.New(config)

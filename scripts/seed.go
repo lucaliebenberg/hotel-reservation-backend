@@ -7,6 +7,7 @@ import (
 
 	"github.com/lucaliebenberg/hotel-reservation/db"
 	"github.com/lucaliebenberg/hotel-reservation/types"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,12 +19,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	hotelStore := db.NewMongoHotelStore(client, db.DBNAME)
-	roomStore := db.NewMongoRoomStore(client, db.DBNAME)
+	if err := client.Database(db.DBNAME).Drop(ctx); err != nil {
+		log.Fatal(err)
+	}
+	hotelStore := db.NewMongoHotelStore(client)
+	roomStore := db.NewMongoRoomStore(client, hotelStore)
 
 	hotel := types.Hotel{
 		Name:     "Saint Tropez",
 		Location: "France",
+		Rooms:    []primitive.ObjectID{},
 	}
 	rooms := []types.Room{
 		{

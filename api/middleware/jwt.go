@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -18,14 +19,19 @@ func JWTAuthentication(c *fiber.Ctx) error {
 	}
 
 	token := tokens[0]
-	if err := parseToken(token); err != nil {
+	fmt.Println("---token", token)
+	claims, err := validateToken(token)
+	if err != nil {
 		return err
 	}
-
+	expires := claims["expires"].(time.Time)
+	println()
+	// Check token expiration
+	fmt.Println("-- expires", expires)
 	return nil
 }
 
-func parseToken(tokenStr string) error {
+func validateToken(tokenStr string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			fmt.Println("Invalid signing method:", token.Header["alg"])
@@ -36,11 +42,17 @@ func parseToken(tokenStr string) error {
 	})
 	if err != nil {
 		fmt.Println("failed to parse token:", err)
-		return fmt.Errorf("unauthorised")
+		return nil, fmt.Errorf("unauthorized")
+	}
+	if !token.Valid {
+		fmt.Println("invalid token")
+		return nil, fmt.Errorf("unauthorized")
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		fmt.Println(claims)
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, fmt.Errorf("unauthorized")
 	}
-	return fmt.Errorf("unauthorized")
+
+	return claims, nil
 }

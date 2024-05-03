@@ -21,22 +21,6 @@ func NewUserHandler(userStore db.UserStore) *UserHandler {
 	}
 }
 
-type AuthParams struct {
-	Email    string `json:"emnail"`
-	Password string `json:"password"`
-}
-
-func (h *UserHandler) HandleAuthenticate(c *fiber.Ctx) error {
-	var AuthParams AuthParams
-	if err := c.BodyParser(&AuthParams); err != nil {
-		return err
-	}
-
-	println(AuthParams)
-
-	return nil
-}
-
 func (h *UserHandler) HandleDeleteUser(c *fiber.Ctx) error {
 	userID := c.Params("id")
 	if err := h.userStore.DeleteUser(c.Context(), userID); err != nil {

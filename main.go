@@ -51,6 +51,7 @@ func main() {
 		app   = fiber.New(config)
 		auth  = app.Group("/api")
 		apiv1 = app.Group("/api/v1", middleware.JWTAuthentication(userStore))
+		admin = apiv1.Group("/admin", middleware.AdminAuth)
 	)
 
 	// Auth handlers
@@ -75,8 +76,10 @@ func main() {
 	// TODO: cancel booking
 
 	// Booking handlers
-	apiv1.Get("/booking", bookingHandler.HandleGetBookings)
 	apiv1.Get("/booking/:id", bookingHandler.HandleGetBooking)
+
+	// Adin handlers
+	admin.Get("/bookings", bookingHandler.HandleGetBookings)
 
 	if err := app.Listen(*listenAddr); err != nil {
 		panic(err)

@@ -26,6 +26,7 @@ type CreateUserParams struct {
 	LastName  string `json:"lastName"`
 	Password  string `json:"password"`
 	Email     string `json:"email"`
+	IsAdmin   bool   `json:"isAdmin"`
 }
 
 func (p UpdateUserParams) ToBSON() bson.M {
@@ -51,7 +52,7 @@ func (params CreateUserParams) Validate() map[string]string {
 		errors["email"] = fmt.Sprintf("password length should be at least %d", minPasswordLen)
 	}
 	if !isEmailValid(params.Email) {
-		errors["password"] = fmt.Sprintf("email is invalid")
+		errors["password"] = fmt.Sprintf("email %s is invalid", params.Email)
 	}
 	return errors
 }
@@ -71,6 +72,7 @@ type User struct {
 	LastName          string             `bson:"lastName" json:"lastName"`
 	Email             string             `bson:"email" json:"email"`
 	EncryptedPassword string             `bson:"encryptedPassword" json:"-"`
+	IsAdmin           bool               `bson:"isAdmin" json:"isAdmin"`
 }
 
 func NewUserFromParams(params CreateUserParams) (*User, error) {

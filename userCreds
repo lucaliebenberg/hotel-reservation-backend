@@ -1,0 +1,11 @@
+[
+    {
+      "email": "foobaz@twitter.com",
+      "password": "notsecurepsswd"
+    },
+    {
+        "email": "bazfoo@twitter.com",
+        "password": "notsecurepsswd"
+    }
+]
+

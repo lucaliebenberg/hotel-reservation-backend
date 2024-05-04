@@ -24,6 +24,7 @@ var config = fiber.Config{
 }
 
 func main() {
+	// 2024-05-04 12:02:36.423585 +0200 SAST m=+0.003781501
 	listenAddr := flag.String("listenaddr", ":4000", "The listen address of the API server.")
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.DBURI))
 	if err != nil {
@@ -42,10 +43,11 @@ func main() {
 		userHandler  = api.NewUserHandler(userStore)
 		hotelHandler = api.NewHotelHandler(store)
 		authHandler  = api.NewAuthHandler(userStore)
+		roomHandler  = api.NewRoomHandler(store)
 
 		app   = fiber.New(config)
 		auth  = app.Group("/api")
-		apiv1 = app.Group("/api/v1", middleware.JWTAuthentication)
+		apiv1 = app.Group("/api/v1", middleware.JWTAuthentication(userStore))
 	)
 
 	// Auth handlers
@@ -63,6 +65,8 @@ func main() {
 	apiv1.Get("/hotel", hotelHandler.HandleGetHotels)
 	apiv1.Get("/hotel/:id", hotelHandler.HandleGetHotel)
 	apiv1.Get("/hotel/:id/rooms", hotelHandler.HandleGetRooms)
+
+	apiv1.Post("room/:id/book", roomHandler.HandleBookRoom)
 
 	if err := app.Listen(*listenAddr); err != nil {
 		panic(err)

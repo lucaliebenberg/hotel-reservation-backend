@@ -24,11 +24,20 @@ func JWTAuthentication(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	expires := claims["expires"].(time.Time)
-	println()
+	fmt.Println("--- claims", claims)
+
+	expiresStr := claims["expires"].(string)
+	expiresTime, err := time.Parse(time.RFC3339, expiresStr)
+	if err != nil {
+		return fmt.Errorf("failed to parse expiration time: %v", err)
+	}
+
 	// Check token expiration
-	fmt.Println("-- expires", expires)
-	return nil
+	if time.Now().After(expiresTime) {
+		return fmt.Errorf("token expired")
+	}
+
+	return c.Next()
 }
 
 func validateToken(tokenStr string) (jwt.MapClaims, error) {

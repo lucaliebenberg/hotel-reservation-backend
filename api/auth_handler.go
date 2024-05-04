@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -33,6 +34,18 @@ type AuthReponse struct {
 	Token string      `json:"token"`
 }
 
+type genericResp struct {
+	Type string `json:"status"`
+	Msg  string `json:"msg"`
+}
+
+func invalidCredentials(c *fiber.Ctx) error {
+	return c.Status(http.StatusBadRequest).JSON(genericResp{
+		Type: "error",
+		Msg:  "invalid credentials",
+	})
+}
+
 // A handler should only do:
 //	- serialization of the incoming request (JSON)
 //	- do sopme data fetching
@@ -48,13 +61,13 @@ func (h *AuthHandler) HandleAuthenticate(c *fiber.Ctx) error {
 	user, err := h.userStore.GetUserByEmail(c.Context(), params.Email)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return fmt.Errorf("invalid credentials")
+			return invalidCredentials(c)
 		}
 		return err
 	}
 
 	if !types.IsValidPassword(user.EncryptedPassword, params.Password) {
-		return fmt.Errorf("invalid credentials")
+		return invalidCredentials(c)
 	}
 	resp := AuthReponse{
 		User:  user,
@@ -66,12 +79,11 @@ func (h *AuthHandler) HandleAuthenticate(c *fiber.Ctx) error {
 func createTokenFromUser(user *types.User) string {
 	now := time.Now()
 	expires := now.Add(time.Hour * 4)
-	expiresUnix := expires.Unix()
 
 	claims := jwt.MapClaims{
 		"id":      user.ID,
 		"email":   user.Email,
-		"expires": expiresUnix,
+		"expires": expires,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	secret := os.Getenv("JWT_SECRET")

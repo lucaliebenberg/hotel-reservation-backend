@@ -31,14 +31,6 @@ func (h *HotelHandler) HandleGetRooms(c *fiber.Ctx) error {
 	return c.JSON(rooms)
 }
 
-func (h *HotelHandler) HandleGetHotels(c *fiber.Ctx) error {
-	hotels, err := h.store.Hotel.GetHotels(c.Context(), nil)
-	if err != nil {
-		return ErrResourceNotFound("hotels")
-	}
-	return c.JSON(hotels)
-}
-
 func (h *HotelHandler) HandleGetHotel(c *fiber.Ctx) error {
 	id := c.Params("id")
 	hotels, err := h.store.Hotel.GetHotelByID(c.Context(), id)
@@ -46,4 +38,33 @@ func (h *HotelHandler) HandleGetHotel(c *fiber.Ctx) error {
 		return ErrResourceNotFound("hotels")
 	}
 	return c.JSON(hotels)
+}
+
+type ResourceResp struct {
+	Results int `json:"results"`
+	Data    any `json:"data"`
+	Page    int `json:"page"`
+}
+
+func (h *HotelHandler) HandleGetHotels(c *fiber.Ctx) error {
+	var pagination db.Pagination
+	if err := c.QueryParser(&pagination); err != nil {
+		return ErrBadRequest()
+	}
+
+	// __MongoDB specific implementation__
+	// opts := options.FindOptions{}
+	// opts.SetSkip(int64((page - 1) * limit))
+	// opts.SetLimit(int64(limit))
+
+	hotels, err := h.store.Hotel.GetHotels(c.Context(), nil, &pagination)
+	if err != nil {
+		return ErrResourceNotFound("hotels")
+	}
+	resp := ResourceResp{
+		Data:    hotels,
+		Results: len(hotels),
+		Page:    int(pagination.Page),
+	}
+	return c.JSON(resp)
 }

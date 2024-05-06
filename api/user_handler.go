@@ -29,7 +29,6 @@ func (h *UserHandler) HandleDeleteUser(c *fiber.Ctx) error {
 
 func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
 	var (
-		// values bson.M
 		params types.UpdateUserParams
 		userID = c.Params("id")
 	)

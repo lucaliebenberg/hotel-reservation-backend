@@ -1,9 +1,27 @@
-# Hotel Reservation JSON API
+# Hotel Reservation Backend
+
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Contributing](#contributing)
+
+## Project outline
+- users -> book form from a hotel
+- admins -> going to check reservation/bookings
+- Authentication & Authorization -> JWT tokens
+- Hotels -> CRUD API -> JSON
+- Rooms -> CRUD API -> JSON
+- Scripts -> database management -> seeding,  migration
+
+## Project Environment Variables
+```
+HTTP_LISTEN_ADDRESS:=
+JWT_SECRET=
+MONGO_DB_NAME=
+MONGO_DB_URL=
+MONGO_DB_URL_TEST=
+```
 
 ## Installation
 
@@ -19,7 +37,7 @@
 
 3. Run the project:
   ```bash
-  ./project
+  ./go-hotel-reservation-json-API
   ```
 ## Contributing
 If you would like to contribute to the project, please follow these steps:

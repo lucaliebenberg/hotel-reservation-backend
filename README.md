@@ -26,12 +26,12 @@ MONGO_DB_URL_TEST=
 
 2. Build the project:
   ```bash
-  go build
+  go build -o hotel-reservation-backend/bin
   ```
 
 3. Run the project:
   ```bash
-  ./hotel-reservation-backend
+  ./hotel-reservation-backend/bin
   ```
 ## Contributing
 If you would like to contribute to the project, please follow these steps:

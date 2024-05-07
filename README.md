@@ -1,11 +1,5 @@
 # Hotel Reservation Backend
 
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Contributing](#contributing)
-
 ## Project outline
 - users -> book form from a hotel
 - admins -> going to check reservation/bookings
@@ -27,7 +21,7 @@ MONGO_DB_URL_TEST=
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/lucaliebenberg/go-hotel-reservation-json-API.git
+   git clone https://github.com/lucaliebenberg/hotel-reservation-backend.git
    ```
 
 2. Build the project:
@@ -37,7 +31,7 @@ MONGO_DB_URL_TEST=
 
 3. Run the project:
   ```bash
-  ./go-hotel-reservation-json-API
+  ./hotel-reservation-backend
   ```
 ## Contributing
 If you would like to contribute to the project, please follow these steps:

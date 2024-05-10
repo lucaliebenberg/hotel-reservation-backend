@@ -20,9 +20,9 @@ MONGO_DB_URL_TEST=
 ## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/lucaliebenberg/hotel-reservation-backend.git
-   ```
+```bash
+git clone https://github.com/lucaliebenberg/hotel-reservation-backend.git
+```
 
 2. Build the project:
   ```bash

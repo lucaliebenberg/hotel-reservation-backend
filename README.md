@@ -1,8 +1,8 @@
 # Hotel Reservation Backend
 
 ## Project outline
-- users -> book form from a hotel
-- admins -> going to check reservation/bookings
+- Users -> book form from a hotel
+- Admins -> going to check reservation/bookings
 - Authentication & Authorization -> JWT tokens
 - Hotels -> CRUD API -> JSON
 - Rooms -> CRUD API -> JSON

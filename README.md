@@ -31,7 +31,7 @@ git clone https://github.com/lucaliebenberg/hotel-reservation-backend.git
 
 3. Run the project:
   ```bash
-  ./hotel-reservation-backend/bin
+  go run main.go 
   ```
 ## Contributing
 If you would like to contribute to the project, please follow these steps:
